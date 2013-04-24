@@ -1,12 +1,8 @@
 package scala2
 
-final case class Option[+T] private(val value:Any = null) extends AnyVal {
-  def get:T = value match {
-    case null => throw new NoSuchElementException("None.get")
-    case Option.someNullValue => null.asInstanceOf[T]
-    case x => x.asInstanceOf[T]
-  }
-  def isEmpty: Boolean = value == null
+final class Option[+T] private(val value:Any) extends AnyVal {
+  def get:T = if(isDefined) value.asInstanceOf[T] else throw new NoSuchElementException("None.get")
+  def isEmpty: Boolean = Option.noneValue eq value.asInstanceOf[AnyRef]
   def isDefined: Boolean = !isEmpty
   def nonEmpty = isDefined
   def contains[U >: T](elem: U): Boolean = !isEmpty && value == elem
@@ -33,16 +29,15 @@ final case class Option[+T] private(val value:Any = null) extends AnyVal {
 }
 
 object Option {
-  private val someNullValue = new AnyRef 
+  private val noneValue = new AnyRef
   
-  def some[T](value:T) : Option[T] = value match {
-    case null => new Option(someNullValue)
-    case x:AnyRef => new Option(x)
-  }
+  def apply[T](value:T) = if(value==null) none else some(value)
   
-  def empty[T] = new Option[T]()
+  def some[T](value:T) = new Option[T](value)
   
-  val none = new Option()
+  def empty[T] = new Option[T](noneValue)
+
+  val none = new Option(noneValue)
 }
 
 object Some {
