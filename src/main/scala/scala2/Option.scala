@@ -48,5 +48,5 @@ object Option {
 object Some {
   def apply[T](value:T) = Option.some(value)
   
-  def unapply[T](value:Option[T]) = if(value.isDefined) scala.Option(value.get) else scala.None
+  def unapply[T](value:Option[T]) = if(value.isDefined) scala.Some(value.get) else scala.None
 }
