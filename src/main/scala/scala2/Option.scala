@@ -37,7 +37,7 @@ object Option {
   
   def empty[T] = new Option[T](noneValue)
 
-  val none = new Option(noneValue)
+  val none = new Option[Nothing](noneValue)
 }
 
 object Some {
